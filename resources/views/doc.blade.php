@@ -42,6 +42,24 @@
 	    			</li>
 	    		@endforeach
 	    	</div>
+		</div>
+		<div class="col-xs-12 headers">
+	    	<h6>Messages</h6>
+	    	<div id="json-header"></div>
+	    	<div>
+	    		@foreach($doc->messages() as $message)
+	    			<li class="message">
+						<span>Code : </span>
+						<span>{{$message->code}}</span><br>
+						<span>Custom Code : </span>
+						<span>{{$message->custom_code}}</span>
+						<p class="p-text">
+							<label class="badge badge-info">پیام</label> 
+							{{$message->response}}
+						</p>
+	    			</li>
+	    		@endforeach
+	    	</div>
     	</div>
     </div>
   </div>

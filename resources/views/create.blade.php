@@ -98,7 +98,7 @@
 	    		</div>
 	    	</div>
 	    	<hr>
-	    	<!-------- Add Errors -------->
+	    	<!-------- Add Message -------->
 	    	<div class="form-group">
 	    		<label>خطاها</label>
 	    		<div class="errors">
@@ -109,10 +109,10 @@
 									<i class="fas fa-trash"></i>
 							    </span>
 							</div>
-							<input type="text" class="form-control monospace" 	placeholder="Error Code" name="error_code[]">
-							<input type="text" class="form-control monospace" placeholder="Error Custom Code" name="error_custom_code[]">
+							<input type="text" class="form-control monospace" 	placeholder="Message Code" name="message_code[]">
+							<input type="text" class="form-control monospace" placeholder="Message Custom Code" name="message_custom_code[]">
 						</div>
-						<textarea class="form-control" placeholder="توضیحات خطا" rows="2" name="error_description[]"></textarea>
+						<textarea class="form-control" placeholder="توضیحات خطا" rows="2" name="message_response[]"></textarea>
 	    			</div>
 	    		</div>
 	    		 <button type="button" class="btn btn-sm btn-dark add-error">
@@ -178,7 +178,7 @@
 		$(this).parent().parent().parent().remove();
 	})
 
-	/*---------- Error DOM ---------*/
+	/*---------- Message DOM ---------*/
 
 	$('.add-error').click(function(){
 		var html = 
@@ -190,10 +190,10 @@
 							<i class="fas fa-trash"></i>
 					    </span>
 					</div>
-					<input type="text" class="form-control monospace" 	placeholder="Error Code" name="error_code[]">
-					<input type="text" class="form-control monospace" placeholder="Error Custom Code" name="error_custom_code[]">
+					<input type="text" class="form-control monospace" 	placeholder="Message Code" name="message_code[]">
+					<input type="text" class="form-control monospace" placeholder="Message Custom Code" name="message_custom_code[]">
 				</div>
-				<textarea class="form-control" placeholder="توضیحات خطا" rows="2" name="error_description[]"></textarea>
+				<textarea class="form-control" placeholder="توضیحات خطا" rows="2" name="message_response[]"></textarea>
 			</div>
 		`;
 		$('.errors').append(html);

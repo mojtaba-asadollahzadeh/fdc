@@ -98,3 +98,25 @@ select.method{
 	font-weight: 800;
 	font-size: 15px;
 }
+
+li.message{
+	background:#ffeaa7;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #c9c9c9;
+	list-style: none;
+}
+
+li.message label{
+    float: left;
+    padding-bottom: 8px;
+    padding-right: 7px;
+}
+
+p.p-text{
+	background: #fff;
+	font-family: "yekan",monospace;
+	text-align: right;
+	direction: rtl;
+	padding: 10px;
+}

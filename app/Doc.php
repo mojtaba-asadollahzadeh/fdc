@@ -16,8 +16,8 @@ class Doc extends Model
     	return  Header::where('doc_id',$this->id)->get();
     }
 
-    public function errors()
+    public function messages()
     {
-    	return  Error::where('doc_id',$this->id)->get();
+    	return  Message::where('doc_id',$this->id)->get();
     }
 }

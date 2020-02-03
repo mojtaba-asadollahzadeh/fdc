@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Doc as Doc;
 use App\Body as Body;
 use App\Header as Header;
-use App\Error as Error;
+use App\Message as Message;
 
 class DocController extends Controller
 {
@@ -28,9 +28,9 @@ class DocController extends Controller
     		'header_name' => 'required|array',
     		'header_validation' => 'required|array',
     		'header_sample' => 'required|array',
-    		'error_code' => 'required|array',
-    		'error_custom_code' => 'required|array',
-    		'error_description' => 'required|array'
+    		'message_code' => 'required|array',
+    		'message_custom_code' => 'required|array',
+    		'message_response' => 'required|array'
     	]);
     	// create the document
     	$doc = new Doc;
@@ -59,14 +59,14 @@ class DocController extends Controller
     		$header->save();
     	}
 
-    	// create the errors
-    	for ($i=0; $i < sizeof($request->input('error_code')); $i++) { 
-    		$error = new Error;
-    		$error->doc_id = $doc->id;
-    		$error->code = $request->input('error_code')[$i];
-    		$error->custom_code = $request->input('error_custom_code')[$i];
-    		$error->description = $request->input('error_description')[$i];
-    		$error->save();
+    	// create the Messages
+    	for ($i=0; $i < sizeof($request->input('message_code')); $i++) { 
+    		$message = new Message;
+    		$message->doc_id = $doc->id;
+    		$message->code = $request->input('message_code')[$i];
+    		$message->custom_code = $request->input('message_custom_code')[$i];
+    		$message->response = $request->input('message_response')[$i];
+    		$message->save();
     	}
     	
     	return redirect()->back()->with('success','مستند با موفقیت ایجاد شد!');

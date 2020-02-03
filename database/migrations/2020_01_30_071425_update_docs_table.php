@@ -25,6 +25,8 @@ class UpdateDocsTable extends Migration
      */
     public function down()
     {
-        Schema::dropColumn('auth');
+        Schema::table('docs', function($table) {
+            $table->dropColumn('auth');
+        });
     }
 }
