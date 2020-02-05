@@ -21,8 +21,11 @@ class CreateBodiesTable extends Migration
               ->references('id')->on('docs')
               ->onDelete('cascade');
             $table->string('name');  
+            $table->string('type');  
             $table->string('validation');
             $table->string('sample');  
+            $table->boolean('required')->default(0);
+            $table->string('default');  
         });
     }
 
