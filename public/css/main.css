@@ -109,8 +109,8 @@ li.message{
 
 li.message label{
     float: left;
-    padding-bottom: 8px;
-    padding-right: 7px;
+    /* padding-bottom: 8px;
+    padding-right: 7px; */
 }
 
 p.p-text{

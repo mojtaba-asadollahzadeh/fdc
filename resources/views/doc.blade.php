@@ -54,7 +54,7 @@
 						<span>Custom Code : </span>
 						<span>{{$message->custom_code}}</span>
 						<p class="p-text">
-							<label class="badge badge-info">پیام</label> 
+							<label class="badge badge-info">response</label> 
 							{{$message->response}}
 						</p>
 	    			</li>
