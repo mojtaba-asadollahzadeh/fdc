@@ -120,3 +120,14 @@ p.p-text{
 	direction: rtl;
 	padding: 10px;
 }
+
+.body .required-box{
+	line-height: normal;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: -4px;
+}
+.body select{
+	height: auto !important;
+}

@@ -21,8 +21,9 @@ class CreateHeadersTable extends Migration
               ->references('id')->on('docs')
               ->onDelete('cascade');
             $table->string('name');  
-            $table->string('validation');
+            $table->string('type');
             $table->string('sample');  
+            $table->boolean('required')->default(0);
         });
     }
 

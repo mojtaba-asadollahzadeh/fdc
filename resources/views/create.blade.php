@@ -54,8 +54,18 @@
 							    </span>
 							  </div>
 							  <input type="text" class="form-control monospace" placeholder="(name) e.g. username" name="body_name[]">
+							  <select class="form-control" name="body_type">
+							  	<option value="integer">integer</option>
+							  	<option value="long">long</option>
+							  	<option value="string">string</option>
+							  </select>
 							  <input type="text" class="form-control monospace" placeholder="(validation) e.g. required|string" name="body_validation[]">
 							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. mojtaba_asdl" name="body_sample[]">
+							  <label class="required-box">
+							  	<input type="checkbox" name="body_required[]">
+							  	required
+							  </label>
+							  <input type="text" class="form-control monospace" placeholder="(default) e.g. null" name="body_default[]">
 						</div>
 	    			</div>
 	    			<div class="append-body"></div>
@@ -134,17 +144,27 @@
 		var html = 
 		`
 			<div class="col-xs-12 body">
-				<div class="input-group">
-					  <div class="input-group-prepend">
-					    <span class="input-group-text remove-body">
-							<i class="fas fa-trash"></i>
-					    </span>
-					  </div>
-					  <input type="text" class="form-control monospace" placeholder="name (e.g. username)" name="body_name[]">
-					  <input type="text" class="form-control monospace" placeholder="validation (e.g. required|string|min:3)" name="body_validation[]">
-					  <input type="text" class="form-control monospace" placeholder="sample (e.g. mojtaba_asdl)" name="body_sample[]">
-					</div>
-			</div>
+	    				<div class="input-group">
+							  <div class="input-group-prepend">
+							    <span class="input-group-text remove-body">
+									<i class="fas fa-trash"></i>
+							    </span>
+							  </div>
+							  <input type="text" class="form-control monospace" placeholder="(name) e.g. username" name="body_name[]">
+							  <select class="form-control" name="body_type">
+							  	<option value="integer">integer</option>
+							  	<option value="long">long</option>
+							  	<option value="string">string</option>
+							  </select>
+							  <input type="text" class="form-control monospace" placeholder="(validation) e.g. required|string" name="body_validation[]">
+							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. mojtaba_asdl" name="body_sample[]">
+							  <label class="required-box">
+							  	<input type="checkbox" name="body_required[]">
+							  	required
+							  </label>
+							  <input type="text" class="form-control monospace" placeholder="(default) e.g. null" name="body_default[]">
+						</div>
+	    			</div>
 		`;
 		$('.append-body').append(html);
 	});
@@ -153,7 +173,7 @@
 		$(this).parent().parent().parent().remove();
 	})
 
-	/*---------- Body DOM ---------*/
+	/*---------- Header DOM ---------*/
 
 	$('.add-header').click(function(){
 		var html = 

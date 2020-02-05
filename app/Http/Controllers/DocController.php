@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Doc as Doc;
 use App\Body as Body;
 use App\Header as Header;
-use App\Message as Message;
+use App\Response as Response;
 
 class DocController extends Controller
 {
@@ -23,14 +23,21 @@ class DocController extends Controller
     		'method' => 'required|string|in:POST,GET,DELETE,PUT,PATCH',
     		'endpoint' => 'required|string',
     		'body_name' => 'required|array',
-    		'body_validation' => 'required|array',
+    		'body_type' => 'required|array',
+            'body_validation' => 'required|array',
+            'body_required' => 'required|array',
     		'body_sample' => 'required|array',
-    		'header_name' => 'required|array',
-    		'header_validation' => 'required|array',
+            'body_default' => 'required|array',
+    		
+            'header_name' => 'required|array',
+    		'header_type' => 'required|array',
     		'header_sample' => 'required|array',
-    		'message_code' => 'required|array',
-    		'message_custom_code' => 'required|array',
-    		'message_response' => 'required|array'
+            'header_required' => 'required|array',
+
+    		'response_status' => 'required|array',
+    		'response_code' => 'required|array',
+    		'response_body' => 'required|array',
+            'response_error' => 'required|array'
     	]);
     	// create the document
     	$doc = new Doc;
@@ -44,8 +51,11 @@ class DocController extends Controller
     		$body = new Body;
     		$body->doc_id = $doc->id;
     		$body->name = $request->input('body_name')[$i];
+            $body->type = $request->input('body_type')[$i];
     		$body->validation = $request->input('body_validation')[$i];
     		$body->sample = $request->input('body_sample')[$i];
+            $body->required = $request->input('body_required')[$i];
+            $body->default = $request->input('body_default')[$i];
     		$body->save();
     	}
 
@@ -54,19 +64,21 @@ class DocController extends Controller
     		$header = new Header;
     		$header->doc_id = $doc->id;
     		$header->name = $request->input('header_name')[$i];
-    		$header->validation = $request->input('header_validation')[$i];
+    		$header->type = $request->input('header_type')[$i];
     		$header->sample = $request->input('header_sample')[$i];
+            $header->required = $request->input('header_required')[$i];
     		$header->save();
     	}
 
-    	// create the Messages
-    	for ($i=0; $i < sizeof($request->input('message_code')); $i++) { 
-    		$message = new Message;
-    		$message->doc_id = $doc->id;
-    		$message->code = $request->input('message_code')[$i];
-    		$message->custom_code = $request->input('message_custom_code')[$i];
-    		$message->response = $request->input('message_response')[$i];
-    		$message->save();
+    	// create the Responses
+    	for ($i=0; $i < sizeof($request->input('http_status')); $i++) { 
+    		$response = new Response;
+    		$response->doc_id = $doc->id;
+    		$response->status = $request->input('response_status')[$i];
+    		$response->code = $request->input('response_code')[$i];
+    		$response->response = $request->input('response_body')[$i];
+            $response->error = $request->input('response_error')[$i];
+    		$response->save();
     	}
     	
     	return redirect()->back()->with('success','مستند با موفقیت ایجاد شد!');
