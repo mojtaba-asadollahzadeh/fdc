@@ -41,38 +41,52 @@
 	    		<label>افزودن پارامتر های body 
 	    			<small class="text-muted">
 	    				<a href="">
-	    					مشاهده راهنما
+	    					مشاهده راهنما	
 	    				</a>
 	    			</small>
 	    		</label>
 	    		<div class="row" dir="ltr">
-	    			<div class="col-xs-12 body">
-	    				<div class="input-group">
-							  <div class="input-group-prepend">
-							    <span class="input-group-text remove-body">
-									<i class="fas fa-trash"></i>
-							    </span>
-							  </div>
-							  <input type="text" class="form-control monospace" placeholder="(name) e.g. username" name="body_name[]">
-							  <select class="form-control" name="body_type">
-							  	<option value="integer">integer</option>
-							  	<option value="long">long</option>
-							  	<option value="string">string</option>
-							  </select>
-							  <input type="text" class="form-control monospace" placeholder="(validation) e.g. required|string" name="body_validation[]">
-							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. mojtaba_asdl" name="body_sample[]">
-							  <label class="required-box">
-							  	<input type="checkbox" name="body_required[]">
-							  	required
-							  </label>
-							  <input type="text" class="form-control monospace" placeholder="(default) e.g. null" name="body_default[]">
-						</div>
-	    			</div>
-	    			<div class="append-body"></div>
+	    			<div class="append-body">
+							<div class="col-xs-12 body-item body">
+									<div class="input-group">
+										  <div class="input-group-prepend">
+												<span class="input-group-text up-body">
+													<i class="fas fa-angle-up"></i>
+												</span>
+												<span class="input-group-text down-body">
+													<i class="fas fa-angle-down"></i>
+												</span>
+												<span class="input-group-text remove-body">
+													<i class="fas fa-trash"></i>
+												</span>
+										  </div>
+										  <input type="text" class="form-control monospace" placeholder="(name)" name="body_name[]">
+										  <select class="form-control" name="body_type[]">
+											  <option value="integer">integer</option>
+											  <option value="long">long</option>
+											  <option value="string">string</option>
+										  </select>
+										  <input type="text" class="form-control monospace" placeholder="(validation)" name="body_validation[]">
+										  <input type="text" class="form-control monospace" placeholder="(sample)" name="body_sample[]">
+											  
+										  <label class="switch">
+											<input type="checkbox" name="body_required[]">
+											<span class="slider"></span>
+										  </label>
+										  <span class="switch-label">required?</span>
+										  <input type="text" class="form-control monospace default-value-input" placeholder="(default)" name="body_default[]">
+									</div>
+							</div>
+					</div>
 	    			<div class="col-xs-12" dir="ltr">
-	    				<button type="button" class="btn btn-sm btn-info add-body">
+						<button type="button" class="btn btn-sm btn-info copy-body">
+								کپی کردن این پارامتر ها
+								&nbsp&nbsp<i class="fas fa-copy"></i>	
+						</button>
+						<button type="button" class="btn btn-sm btn-success add-body">
 		    				<i class="fas fa-plus"></i>
-		    			</button>
+						</button>
+						
 	    			</div>
 	    		</div>
 	    	</div>
@@ -101,16 +115,67 @@
 	    			</div>
 	    			<div class="append-header"></div>
 	    			<div class="col-xs-12" dir="ltr">
-	    				<button type="button" class="btn btn-sm btn-warning add-header">
+	    				<button type="button" class="btn btn-sm btn-success add-header">
 		    				<i class="fas fa-plus"></i>
 		    			</button>
 	    			</div>
 	    		</div>
 	    	</div>
-	    	<hr>
-	    	<!-------- Add Message -------->
+			<hr>
+			
+			<!-------- Add Responses -------->
 	    	<div class="form-group">
-	    		<label>خطاها</label>
+					<label>افزودن پارامتر های Response 
+						<small class="text-muted">
+							<a href="">
+								مشاهده راهنما
+							</a>
+						</small>
+					</label>
+					<div class="row" dir="ltr">
+						<div class="append-response">
+								<div class="col-xs-12 body response">
+										<div class="input-group">
+											  <div class="input-group-prepend">
+													<span class="input-group-text up-body">
+														<i class="fas fa-angle-up"></i>
+													</span>
+													<span class="input-group-text down-body">
+														<i class="fas fa-angle-down"></i>
+													</span>
+													<span class="input-group-text remove-body">
+														<i class="fas fa-trash"></i>
+													</span>
+											  </div>
+											  <input type="text" class="form-control monospace" placeholder="(name)" name="body_name[]">
+											  <select class="form-control" name="body_type[]">
+												  <option value="integer">integer</option>
+												  <option value="long">long</option>
+												  <option value="string">string</option>
+											  </select>
+											  <input type="text" class="form-control monospace" placeholder="(sample)" name="body_sample[]">												  
+										</div>
+								</div>
+						</div>
+						<div class="col-xs-12" dir="ltr">
+							<button type="button" class="btn btn-sm btn-success add-response">
+								<i class="fas fa-plus"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+				<hr>
+			
+				<!-------- Add Message -------->
+	    	<div class="form-group">
+	    		<label>
+					افزودن پیغام های Response
+						<small class="text-muted">
+							<a href="">
+								مشاهده راهنما
+							</a>
+						</small>
+				</label>
 	    		<div class="errors">
 	    			<div class="error">
 	    				<div class="input-group" dir="ltr">
@@ -119,13 +184,13 @@
 									<i class="fas fa-trash"></i>
 							    </span>
 							</div>
-							<input type="text" class="form-control monospace" 	placeholder="Message Code" name="message_code[]">
-							<input type="text" class="form-control monospace" placeholder="Message Custom Code" name="message_custom_code[]">
+							<input type="text" class="form-control monospace" 	placeholder="Https Satus" name="message_code[]">
+							<input type="text" class="form-control monospace" placeholder="Custom Code" name="message_custom_code[]">
 						</div>
-						<textarea class="form-control" placeholder="توضیحات خطا" rows="2" name="message_response[]"></textarea>
+						<textarea class="form-control" placeholder="‍توضیحات" rows="2" name="message_response[]"></textarea>
 	    			</div>
 	    		</div>
-	    		 <button type="button" class="btn btn-sm btn-dark add-error">
+	    		 <button type="button" class="btn btn-sm btn-success add-error">
 	    			<i class="fas fa-plus"></i>
 	    		</button>
 	    	</div>
@@ -139,39 +204,79 @@
 @section('script')
 <script type="text/javascript">
 	/*---------- Body DOM ---------*/
-
 	$('.add-body').click(function(){
 		var html = 
 		`
-			<div class="col-xs-12 body">
-	    				<div class="input-group">
-							  <div class="input-group-prepend">
-							    <span class="input-group-text remove-body">
-									<i class="fas fa-trash"></i>
-							    </span>
-							  </div>
-							  <input type="text" class="form-control monospace" placeholder="(name) e.g. username" name="body_name[]">
-							  <select class="form-control" name="body_type">
-							  	<option value="integer">integer</option>
-							  	<option value="long">long</option>
-							  	<option value="string">string</option>
-							  </select>
-							  <input type="text" class="form-control monospace" placeholder="(validation) e.g. required|string" name="body_validation[]">
-							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. mojtaba_asdl" name="body_sample[]">
-							  <label class="required-box">
-							  	<input type="checkbox" name="body_required[]">
-							  	required
-							  </label>
-							  <input type="text" class="form-control monospace" placeholder="(default) e.g. null" name="body_default[]">
-						</div>
-	    			</div>
+		<div class="col-xs-12 body">
+			<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text up-body">
+							<i class="fas fa-angle-up"></i>
+						</span>
+						<span class="input-group-text down-body">
+							<i class="fas fa-angle-down"></i>
+						</span>
+						<span class="input-group-text remove-body">
+							<i class="fas fa-trash"></i>
+						</span>
+					</div>
+					<input type="text" class="form-control monospace" placeholder="(name)" name="body_name[]">
+					<select class="form-control" name="body_type[]">
+					<option value="integer">integer</option>
+					<option value="long">long</option>
+					<option value="string">string</option>
+					</select>
+					<input type="text" class="form-control monospace" placeholder="(validation)" name="body_validation[]">
+					<input type="text" class="form-control monospace" placeholder="(sample)" name="body_sample[]">
+						
+					<label class="switch">
+					<input type="checkbox" name="body_required[]">
+					<span class="slider"></span>
+					</label>
+					<span class="switch-label">required?</span>
+					<input type="text" class="form-control monospace default-value-input" placeholder="(default)" name="body_default[]">
+			</div>
+		</div>
 		`;
 		$('.append-body').append(html);
 	});
 
+	$('.copy-body').click(function(){
+		var html = '';
+		$('.body-item').each(function(index,node) {
+			var html = $(this);
+			html = html.find('.default-value-input').remove();
+			html = html.find('.switch-label').remove();
+			html = html.find('.switch').remove();
+			html = html.find('input[name="body_sample[]"]').remove();
+			$(".append-response").append(html);
+		});
+	});
+
+	$('body').on('click', '.up-body', function(){
+		var prev = $(this).parent().parent().parent().prev();
+		var current = $(this).parent().parent().parent();
+		current.insertBefore(prev.get());
+	});
+
+	$('body').on('click', '.down-body', function(){
+		var next = $(this).parent().parent().parent().next();
+		var current = $(this).parent().parent().parent();
+		next.insertBefore(current.get());
+	});
+
 	$('body').on('click', '.remove-body', function(){
 		$(this).parent().parent().parent().remove();
-	})
+	});
+
+	$('body').on('change', 'input[name="body_required[]"]', function(){
+		var default_input = $(this).parent().parent().find('.default-value-input');
+		if(!$(this).is(':checked')){
+			default_input.fadeIn();
+		}else{
+			default_input.fadeOut();
+		}
+	});
 
 	/*---------- Header DOM ---------*/
 
