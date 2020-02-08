@@ -40,16 +40,11 @@ select.method{
 	background: #777;
 	color: #f6f6f6;
 }
-.add-body{
-	outline: none;
-}
 .monospace{
 	font-family: monospace;
 }
-.append-body,.append-header,.append-response{
-	width: 100%;
-}
-.body,.error,.header,.headers{
+
+.element{
 	margin-bottom: 10px;
 	background: #f5f5f5;
 	border:1px solid #e1e1e1; 
@@ -57,15 +52,7 @@ select.method{
 	padding: 10px;
 }
 
-.body{
-	padding-bottom: 0;
-}
-
-.response{
-	padding-bottom: 10px;
-}
-
-.error textarea{
+.element textarea{
 	margin-top: 5px;
 }
 
@@ -103,7 +90,7 @@ select.method{
 	border-bottom:2px dashed #e1e1e1;
 	margin-bottom: 10px;
 }
-.body li span,.headers li span{
+.element li span{
 	font-weight: 800;
 	font-size: 15px;
 }
@@ -130,22 +117,22 @@ p.p-text{
 	padding: 10px;
 }
 
-.body .required-box{
+.element .required-box{
 	line-height: normal;
     font-weight: bold;
     margin-left: 5px;
     margin-right: 5px;
     margin-bottom: -4px;
 }
-.body select{
+.element select{
 	height: auto !important;
 }
 
-.body input,.body span{
+.element input,.element span{
 	height: 34px;
 }
 
-.body select{
+.element select{
 	padding: 0 !important;
     height: 34px !important;
 }
