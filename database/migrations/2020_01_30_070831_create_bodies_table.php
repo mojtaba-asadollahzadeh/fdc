@@ -25,7 +25,7 @@ class CreateBodiesTable extends Migration
             $table->string('validation');
             $table->string('sample');  
             $table->boolean('required')->default(0);
-            $table->string('default');  
+            $table->string('default')->nullable();  
         });
     }
 

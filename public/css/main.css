@@ -96,7 +96,6 @@ select.method{
 }
 
 li.message{
-	background:#ffeaa7;
 	padding: 10px;
 	margin-bottom: 10px;
 	border: 1px solid #c9c9c9;
@@ -112,9 +111,13 @@ li.message label{
 p.p-text{
 	background: #fff;
 	font-family: "yekan",monospace;
-	text-align: right;
-	direction: rtl;
+	text-align: left;
+	direction: ltr;
 	padding: 10px;
+}
+
+p.p-text label{
+	float: right;
 }
 
 .element .required-box{

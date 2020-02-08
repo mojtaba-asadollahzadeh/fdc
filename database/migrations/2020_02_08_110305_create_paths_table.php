@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateResponsesTable extends Migration
+class CreatePathsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateResponsesTable extends Migration
      */
     public function up()
     {
-        Schema::create('responses', function (Blueprint $table) {
+        Schema::create('paths', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
             $table->unsignedBigInteger('doc_id');
             $table->foreign('doc_id')
               ->references('id')->on('docs')
               ->onDelete('cascade');
-            $table->string('status');
-            $table->string('code');
-            $table->boolean('error')->default(0);
-            $table->text('response');
+            $table->string('name');  
+            $table->string('type');
+            $table->string('sample');
         });
     }
 
@@ -34,6 +33,6 @@ class CreateResponsesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('paths');
     }
 }

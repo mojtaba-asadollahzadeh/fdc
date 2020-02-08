@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHeadersTable extends Migration
+class CreateResponsesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateHeadersTable extends Migration
      */
     public function up()
     {
-        Schema::create('headers', function (Blueprint $table) {
+        Schema::create('responses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
             $table->unsignedBigInteger('doc_id');
@@ -22,7 +22,7 @@ class CreateHeadersTable extends Migration
               ->onDelete('cascade');
             $table->string('name');  
             $table->string('type');
-            $table->string('sample');  
+            $table->string('sample');
         });
     }
 
@@ -33,6 +33,6 @@ class CreateHeadersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('headers');
+        Schema::dropIfExists('responses');
     }
 }

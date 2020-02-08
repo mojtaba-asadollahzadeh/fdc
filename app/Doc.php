@@ -20,4 +20,20 @@ class Doc extends Model
     {
     	return  Message::where('doc_id',$this->id)->get();
     }
+
+    public function responses()
+    {
+        $responses = [];
+        $reses = Response::where('doc_id',$this->id)->get();
+        foreach ($reses as $res) {
+            $responses[$res->name] = $res->sample;
+        }
+
+        return $responses;
+    }
+
+    public function paths()
+    {
+        return  Path::where('doc_id',$this->id)->get();
+    }
 }
