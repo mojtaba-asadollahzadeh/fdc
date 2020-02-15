@@ -32,6 +32,11 @@
 	foreach ($doc->headers() as $header) {
 		$headers[$header->name] = $header->sample;
 	}
+
+	$responses = [];
+	foreach ($doc->responses() as $response) {
+		$responses[$response->name] = $response->sample;
+	}
 ?>
 <div class="card" id="print">
   <div class="card-body">
@@ -93,18 +98,14 @@
 				    					error
 		    						@endif
 		    						">
-		    			<p class="p-text"> 
-						@if($message->error)
-	    					<label class="badge badge-danger">Error Response</label>
-						@else
-							<label class="badge badge-success">Success Response</label>
-						@endif	
-						<span>Code : </span>
-						<span>{{$message->status}}</span><br>
-						<span>Custom Code : </span>
-						<span>{{$message->code}}</span>
+		    			<div class="p-text"> 
+							@if($message->error)
+		    					<label class="badge badge-danger">Response : {{$message->status}}</label>
+							@else
+								<label class="badge badge-success">Response : {{$message->status}}</label>
+							@endif	
 							<div id="json-view-{{$message->id}}"></div>
-						</p>
+						</div>
 	    			</li>
 	    		@endforeach
 	    	</div>
@@ -146,7 +147,7 @@
 			}else{
 				$res = [
 					'message' => $msg->message,
-					'data' => $doc->responses()
+					'data' => $responses
 				];
 			}
 		?>

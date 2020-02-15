@@ -97,7 +97,7 @@
 									<span class="slider"></span>
 								  </label>
 								  <span class="switch-label">required?</span>
-								  <input type="text" class="form-control monospace default-value-input" placeholder="(default)" v-model="body.deafult" v-if="!body.required">
+								  <input type="text" class="form-control monospace default-value-input" placeholder="(default)" v-model="body.default" v-if="!body.required">
 							</div>
 					</div>
 					<div class="row">
@@ -255,43 +255,51 @@ console.log(validate({required: "bad"}, constraints));
 var app = new Vue({
   el: '#app',
   data: {
-  	title : '',
-  	method: 'GET',
-  	description: '',
-  	endpoint: '',
+  	title : '{{$doc->title}}',
+  	method: '{{$doc->method}}',
+  	description: '{{$doc->description}}',
+  	endpoint: '{{$doc->endpoint}}',
   	tmpPaths: [],
   	paths: [],
     bodies : [
-		{
-			name : '',
-			type: 'integer',
-			validation: '',
-			sample: '',
-			required: 0,
-			default: ''
-		}
+    	@foreach($doc->bodies() as $body)
+			{
+				name : '{{$body->name}}',
+				type: '{{$body->type}}',
+				validation: '{{$body->validation}}',
+				sample: '{{$body->sample}}',
+				required: {{$body->required}},
+				default: '{{$body->default}}'
+			},
+		@endforeach
 	],
 	headers: [
-		{
-			name : '',
-			type: 'integer',
-			sample: '',
-		}
+		@foreach($doc->headers() as $header)
+			{
+				name : '{{$header->name}}',
+				type: '{{$header->type}}',
+				sample: '{{$header->sample}}',
+			},
+		@endforeach
 	],
 	responses : [
-		{
-			name : '',
-			type: 'integer',
-			sample: '',
-		}
+		@foreach($doc->responses() as $response)
+			{
+				name : '{{$response->name}}',
+				type: '{{$response->type}}',
+				sample: '{{$response->sample}}',
+			},
+		@endforeach
 	],
 	messages : [
-		{
-			status : '',
-			code: '',
-			message: '',
-			error: 0
-		}
+		@foreach($doc->messages() as $message)
+			{
+				status : '{{$message->status}}',
+				code: '{{$message->code}}',
+				message: '{{$message->message}}',
+				error: {{$message->error}}
+			},
+		@endforeach
 	]
   },
 
@@ -432,15 +440,31 @@ var app = new Vue({
 	  			break;
 	  		}
 
-	  		fetch('/api/document', {
-			  method: 'post',
+	  		fetch('/api/document/{{$doc->id}}', {
+			  method: 'put',
 			  headers: {
 			    'Accept': 'application/json',
 			    'Content-Type': 'application/json'
 			  },
 			  body: JSON.stringify(body)
 			}).then(res=>res.json())
-			  .then(res => console.log(res));
+			  .then(res => {
+			  	if(res.success){
+		  			Swal.fire({
+					    icon: 'success',
+					    title: 'با موفقیت به روزرسانی شد!',
+					    text: 'سند مورد نظر با موفقیت به روزرسانی شد.',
+					    showConfirmButton: false
+					});
+		  		}else{
+		  			Swal.fire({
+					    icon: 'error',
+					    title: 'مشکلی به وجود آمده!',
+					    text: 'عملیات شما به مشکلی برخورد, دوباره تلاش کنید.',
+					    showConfirmButton: false
+					});
+		  		}
+			  });
 	  }
   }
 })

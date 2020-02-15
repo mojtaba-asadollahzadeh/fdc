@@ -108,7 +108,7 @@ li.message label{
     padding-right: 7px; */
 }
 
-p.p-text{
+.p-text{
 	background: #fff;
 	font-family: "yekan",monospace;
 	text-align: left;
@@ -116,8 +116,8 @@ p.p-text{
 	padding: 10px;
 }
 
-p.p-text label{
-	float: right;
+.p-text label{
+	float: right !important;
 }
 
 .element .required-box{

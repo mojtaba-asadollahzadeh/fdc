@@ -11,6 +11,11 @@ class Doc extends Model
     	return  Body::where('doc_id',$this->id)->get();
     }
 
+    public function bodies()
+    {
+        return  Body::where('doc_id',$this->id)->get();
+    }
+
     public function headers()
     {
     	return  Header::where('doc_id',$this->id)->get();
@@ -21,15 +26,20 @@ class Doc extends Model
     	return  Message::where('doc_id',$this->id)->get();
     }
 
+    // public function responses()
+    // {
+    //     $responses = [];
+    //     $reses = Response::where('doc_id',$this->id)->get();
+    //     foreach ($reses as $res) {
+    //         $responses[$res->name] = $res->sample;
+    //     }
+
+    //     return $responses;
+    // }
+
     public function responses()
     {
-        $responses = [];
-        $reses = Response::where('doc_id',$this->id)->get();
-        foreach ($reses as $res) {
-            $responses[$res->name] = $res->sample;
-        }
-
-        return $responses;
+        return Response::where('doc_id',$this->id)->get();
     }
 
     public function paths()

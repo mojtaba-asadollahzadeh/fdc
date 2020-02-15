@@ -239,19 +239,8 @@
 
 @section('script')
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 <script>
-var constraints = {
-	required:{
-		presence: true,
-		length: {
-	      minimum: 3
-	    }
-	}
-}
-
-console.log(validate({required: "bad"}, constraints));
-
 var app = new Vue({
   el: '#app',
   data: {
@@ -410,6 +399,24 @@ var app = new Vue({
 		
 	  },
 	  save: function(){
+	  		
+	  		$('input').each(function(){
+	  			if($(this).val() == ''){
+	  				$(this).css('background','#fab1a0');
+	  			}else{
+	  				$(this).css('background','#fff');
+	  			}
+	  		});
+
+	  		$('textarea').each(function(){
+	  			if($(this).val() == ''){
+	  				console.log($(this));
+	  				$(this).css('background','#fab1a0');
+	  			}else{
+	  				$(this).css('background','#fff');
+	  			}
+	  		});
+
 			var body = {};
 			body.title = this.title;
 			body.description = this.description;
@@ -440,7 +447,24 @@ var app = new Vue({
 			  },
 			  body: JSON.stringify(body)
 			}).then(res=>res.json())
-			  .then(res => console.log(res));
+			  .then(res => {
+			  	console.log(res);
+			  	if(res.success){
+		  			Swal.fire({
+					    icon: 'success',
+					    title: 'با موفقیت ذخیره شد!',
+					    text: 'سند مورد نظر با موفقیت ذخیره شد.',
+					    showConfirmButton: false
+					});
+		  		}else{
+		  			Swal.fire({
+					    icon: 'error',
+					    title: 'مشکلی به وجود آمده!',
+					    text: 'عملیات شما به مشکلی برخورد, دوباره تلاش کنید.',
+					    showConfirmButton: false
+					});
+		  		}
+			  });
 	  }
   }
 })
