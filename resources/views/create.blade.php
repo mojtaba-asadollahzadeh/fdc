@@ -53,9 +53,11 @@
 	    				<div class="input-group">
 							  <input type="text" class="form-control monospace" placeholder="(name)" v-model="path.name">
 							  <select class="form-control" v-model="path.type">
-								<option value="integer">integer</option>
-								<option value="long">long</option>
-								<option value="string">string</option>
+								<option value="Boolean">Boolean</option>
+								<option value="Integer">Integer</option>
+								<option value="Long">Long</option>
+								<option value="String">String</option>
+								<option value="Enum">Enum</option>
 							</select>
 							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="path.sample">
 						</div>
@@ -85,9 +87,11 @@
 								  </div>
 								  <input type="text" class="form-control monospace" placeholder="(name)" v-model="body.name">
 								  <select class="form-control" v-model="body.type">
-									  <option value="integer">integer</option>
-									  <option value="long">long</option>
-									  <option value="string">string</option>
+									  <option value="Boolean">Boolean</option>
+										<option value="Integer">Integer</option>
+										<option value="Long">Long</option>
+										<option value="String">String</option>
+										<option value="Enum">Enum</option>
 								  </select>
 								  <input type="text" class="form-control monospace" placeholder="(validation)" v-model="body.validation">
 								  <input type="text" class="form-control monospace" placeholder="(sample)" v-model="body.sample">
@@ -133,9 +137,11 @@
 							  </div>
 							  <input type="text" class="form-control monospace" placeholder="(name) e.g. token" v-model="header.name">
 							  <select class="form-control" v-model="header.type">
-								<option value="integer">integer</option>
-								<option value="long">long</option>
-								<option value="string">string</option>
+								<option value="Boolean">Boolean</option>
+								<option value="Integer">Integer</option>
+								<option value="Long">Long</option>
+								<option value="String">String</option>
+								<option value="Enum">Enum</option>
 							</select>
 							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="header.sample">
 						</div>
@@ -176,9 +182,11 @@
 									  </div>
 									  <input type="text" class="form-control monospace" placeholder="(name)" v-model="response.name">
 									  <select class="form-control" v-model="response.type">
-										  <option value="integer">integer</option>
-										  <option value="long">long</option>
-										  <option value="string">string</option>
+										  <option value="Boolean">Boolean</option>
+											<option value="Integer">Integer</option>
+											<option value="Long">Long</option>
+											<option value="String">String</option>
+											<option value="Enum">Enum</option>
 									  </select>
 									  <input type="text" class="form-control monospace" placeholder="(sample)" v-model="response.sample">												  
 								</div>

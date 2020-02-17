@@ -52,10 +52,12 @@
 	    			<div class="element col-xs-12" dir="ltr" v-for="(path,i) in paths">
 	    				<div class="input-group">
 							  <input type="text" class="form-control monospace" placeholder="(name)" v-model="path.name">
-							  <select class="form-control" v-model="path.type">
-								<option value="integer">integer</option>
-								<option value="long">long</option>
-								<option value="string">string</option>
+							<select class="form-control" v-model="path.type">
+								<option value="Boolean">Boolean</option>
+								<option value="Integer">Integer</option>
+								<option value="Long">Long</option>
+								<option value="String">String</option>
+								<option value="Enum">Enum</option>
 							</select>
 							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="path.sample">
 						</div>
@@ -85,9 +87,11 @@
 								  </div>
 								  <input type="text" class="form-control monospace" placeholder="(name)" v-model="body.name">
 								  <select class="form-control" v-model="body.type">
-									  <option value="integer">integer</option>
-									  <option value="long">long</option>
-									  <option value="string">string</option>
+									  <option value="Boolean">Boolean</option>
+										<option value="Integer">Integer</option>
+										<option value="Long">Long</option>
+										<option value="String">String</option>
+										<option value="Enum">Enum</option>
 								  </select>
 								  <input type="text" class="form-control monospace" placeholder="(validation)" v-model="body.validation">
 								  <input type="text" class="form-control monospace" placeholder="(sample)" v-model="body.sample">
@@ -133,9 +137,11 @@
 							  </div>
 							  <input type="text" class="form-control monospace" placeholder="(name) e.g. token" v-model="header.name">
 							  <select class="form-control" v-model="header.type">
-								<option value="integer">integer</option>
-								<option value="long">long</option>
-								<option value="string">string</option>
+								<option value="Boolean">Boolean</option>
+								<option value="Integer">Integer</option>
+								<option value="Long">Long</option>
+								<option value="String">String</option>
+								<option value="Enum">Enum</option>
 							</select>
 							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="header.sample">
 						</div>
@@ -176,9 +182,11 @@
 									  </div>
 									  <input type="text" class="form-control monospace" placeholder="(name)" v-model="response.name">
 									  <select class="form-control" v-model="response.type">
-										  <option value="integer">integer</option>
-										  <option value="long">long</option>
-										  <option value="string">string</option>
+										  <option value="Boolean">Boolean</option>
+											<option value="Integer">Integer</option>
+											<option value="Long">Long</option>
+											<option value="String">String</option>
+											<option value="Enum">Enum</option>
 									  </select>
 									  <input type="text" class="form-control monospace" placeholder="(sample)" v-model="response.sample">												  
 								</div>
@@ -233,6 +241,7 @@
 	    	</div>
 	    </div>
 	<button class="btn btn-sm btn-primary" @click="save" style="width: 100%;">ذخیره این سند</button>
+	<button class="btn btn-sm btn-success" @click="saveAs" style="width: 100%;">ذخیره جدید این سند</button>
   </div>
 </div>
 @stop
@@ -462,6 +471,74 @@ var app = new Vue({
 					    icon: 'success',
 					    title: 'با موفقیت به روزرسانی شد!',
 					    text: 'سند مورد نظر با موفقیت به روزرسانی شد.',
+					    showConfirmButton: false
+					});
+		  		}else{
+		  			Swal.fire({
+					    icon: 'error',
+					    title: 'مشکلی به وجود آمده!',
+					    text: 'عملیات شما به مشکلی برخورد, دوباره تلاش کنید.',
+					    showConfirmButton: false
+					});
+		  		}
+			  });
+	  },
+	  saveAs: function(){
+	  		
+	  		$('input').each(function(){
+	  			if($(this).val() == ''){
+	  				$(this).css('background','#fab1a0');
+	  			}else{
+	  				$(this).css('background','#fff');
+	  			}
+	  		});
+
+	  		$('textarea').each(function(){
+	  			if($(this).val() == ''){
+	  				console.log($(this));
+	  				$(this).css('background','#fab1a0');
+	  			}else{
+	  				$(this).css('background','#fff');
+	  			}
+	  		});
+
+			var body = {};
+			body.title = this.title;
+			body.description = this.description;
+			body.method = this.method;
+			body.endpoint = this.endpoint;
+	  		switch(this.method){
+	  			case 'POST':
+	  				body.bodies = this.bodies;
+	  				body.headers = this.headers;
+	  				body.responses = this.responses;
+	  				body.messages = this.messages;
+	  			break;
+
+	  			default:
+	  				body.paths = this.paths;
+	  				body.bodies = this.bodies;
+	  				body.headers = this.headers;
+	  				body.responses = this.responses;
+	  				body.messages = this.messages;
+	  			break;
+	  		}
+
+	  		fetch('/api/document', {
+			  method: 'post',
+			  headers: {
+			    'Accept': 'application/json',
+			    'Content-Type': 'application/json'
+			  },
+			  body: JSON.stringify(body)
+			}).then(res=>res.json())
+			  .then(res => {
+			  	console.log(res);
+			  	if(res.success){
+		  			Swal.fire({
+					    icon: 'success',
+					    title: 'با موفقیت ذخیره شد!',
+					    text: 'سند مورد نظر با موفقیت ذخیره شد.',
 					    showConfirmButton: false
 					});
 		  		}else{

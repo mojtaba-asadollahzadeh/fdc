@@ -85,6 +85,25 @@
 	    	</div>
     	</div>
     	@else
+    		@if($doc->method != 'POST')
+    			<hr>
+		    	<div class="col-xs-12 element">
+			    	<h6>Path</h6>
+			    	<div id="json-path"></div>
+			    	<div>
+			    		@foreach($doc->paths() as $path)
+			    			<li>
+			    				<span>
+			    						{{$path->name}}<span class="required">*</span> :
+			    				</span>
+			    				<span>
+			    						required|{{$path->type}}|sample:{{$path->sample}}
+			    				</span>
+			    			</li>
+			    		@endforeach
+			    	</div>
+		    	</div>
+    		@endif
     	<hr>
     	<div class="col-xs-12 element">
 	    	<h6>Body</h6>

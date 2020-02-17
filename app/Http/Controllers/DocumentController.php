@@ -17,8 +17,8 @@ class DocumentController extends Controller
     {
 
     	$validation = Validator::make($request->all(),[ 
-	        'title' => 'required|string|min:3',
-    		'description' => 'required|string|min:3',
+	        'title' => 'required|string|min:1',
+    		'description' => 'required|string|min:1',
     		'method' => 'required|string|in:POST,GET,DELETE,PUT,PATCH',
     		'endpoint' => 'required|string',
     		'bodies' => 'required|array',
@@ -35,13 +35,13 @@ class DocumentController extends Controller
 
 
         /* paths validation */
-        if($request->input('method') != 'POST'){
+        if($request->input('method') == 'GET'){
             /* path validation */
             foreach ($request->input('paths') as $key => $path) {
                 
                 $validation = Validator::make($path,[ 
                     'name' => 'required|string|min:1',
-                    'type' => 'required|string|min:3',
+                    'type' => 'required|string|min:1',
                     'sample' => 'required|string',
                 ]);
 
@@ -50,27 +50,28 @@ class DocumentController extends Controller
                 }        
             }
         }else{
+            if($request->input('method') != 'POST'){
+                /* path validation */
+                foreach ($request->input('paths') as $key => $path) {
+                    
+                    $validation = Validator::make($path,[ 
+                        'name' => 'required|string|min:1',
+                        'type' => 'required|string|min:1',
+                        'sample' => 'required|string',
+                    ]);
 
-            /* path validation */
-            foreach ($request->input('paths') as $key => $path) {
-                
-                $validation = Validator::make($path,[ 
-                    'name' => 'required|string|min:1',
-                    'type' => 'required|string|min:3',
-                    'sample' => 'required|string',
-                ]);
-
-                if($validation->fails()){
-                    $errors['paths'][$key] = $validation->errors();
-                }        
+                    if($validation->fails()){
+                        $errors['paths'][$key] = $validation->errors();
+                    }        
+                }
             }
 
             /* body validation */
             foreach ($request->input('bodies') as $key => $body) {
                 
                 $validation = Validator::make($body,[ 
-                    'name' => 'required|string|min:3',
-                    'type' => 'required|string|min:3',
+                    'name' => 'required|string|min:1',
+                    'type' => 'required|string|min:1',
                     'validation' => 'required|string',
                     'sample' => 'required|string',
                     'required' => 'sometimes||boolean'
@@ -86,8 +87,8 @@ class DocumentController extends Controller
         /* headers validation */
         foreach ($request->input('headers') as $key => $header) {
             $validation = Validator::make($header,[ 
-                'name' => 'required|string|min:3',
-                'type' => 'required|string|min:3',
+                'name' => 'required|string|min:1',
+                'type' => 'required|string|min:1',
                 'sample' => 'required|string'
             ]);
 
@@ -102,8 +103,8 @@ class DocumentController extends Controller
         /* headers validation */
         foreach ($request->input('responses') as $key => $response) {
             $validation = Validator::make($response,[ 
-                'name' => 'required|string|min:3',
-                'type' => 'required|string|min:3',
+                'name' => 'required|string|min:1',
+                'type' => 'required|string|min:1',
                 'sample' => 'required|string'
             ]);
 
@@ -116,7 +117,7 @@ class DocumentController extends Controller
         /* messages validation */
         foreach ($request->input('messages') as $key => $message) {
             $validation = Validator::make($message,[ 
-                'status' => 'required|string|min:3',
+                'status' => 'required|string|min:1',
                 'required' => 'sometimes|boolean',
                 'message' => 'required|string',
             ]);
@@ -158,7 +159,8 @@ class DocumentController extends Controller
     			$body->save();
     		}
 
-	    }else{
+	    }
+        if($request->input('method') != 'POST'){
 	    	foreach ($request->input('paths') as $pth) {
     			$path = new Path;
     			$path->doc_id = $doc->id; 
@@ -216,8 +218,8 @@ class DocumentController extends Controller
     {
 
         $validation = Validator::make($request->all(),[ 
-            'title' => 'required|string|min:3',
-            'description' => 'required|string|min:3',
+            'title' => 'required|string|min:1',
+            'description' => 'required|string|min:1',
             'method' => 'required|string|in:POST,GET,DELETE,PUT,PATCH',
             'endpoint' => 'required|string',
             'bodies' => 'required|array',
@@ -272,19 +274,23 @@ class DocumentController extends Controller
                 $body->save();
             }
 
-        }else{
+        }
+
+        if($request->input('method') != 'POST'){
             foreach ($doc->paths() as $path) {
                 $path->delete();
             }
             foreach ($request->input('paths') as $pth) {
                 $path = new Path;
                 $path->doc_id = $doc->id; 
-                $path->name = $bd['name'];
-                $path->type = $bd['type'];
-                $path->sample = $bd['sample'];
+                $path->name = $pth['name'];
+                $path->type = $pth['type'];
+                $path->sample = $pth['sample'];
                 $path->save();
             }
         }
+
+
 
         foreach ($doc->headers() as $header) {
             $header->delete();
