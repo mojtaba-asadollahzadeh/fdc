@@ -260,7 +260,15 @@ var app = new Vue({
   	description: '{{$doc->description}}',
   	endpoint: '{{$doc->endpoint}}',
   	tmpPaths: [],
-  	paths: [],
+  	paths: [
+  		@foreach($doc->paths() as $path)
+			{
+				name : '{{$path->name}}',
+				type: '{{$path->type}}',
+				sample: '{{$path->sample}}'
+			},
+		@endforeach
+  	],
     bodies : [
     	@foreach($doc->bodies() as $body)
 			{
