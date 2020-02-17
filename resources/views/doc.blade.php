@@ -28,6 +28,11 @@
 		$body[$bd->name] = $bd->sample;
 	}
 
+	$paths = [];
+	foreach ($doc->paths() as $path) {
+		$paths[$path->name] = $path->sample;
+	}
+
 	$headers = [];
 	foreach ($doc->headers() as $header) {
 		$headers[$header->name] = $header->sample;
@@ -55,10 +60,31 @@
     	<div class="col-xs-12 element curl">
     		<h6>Curl</h6>
     		curl --header "Content-Type: application/json" \<br>
-			  --request POST \<br>
+			  --request {{$doc->method}} \<br>
+			  @if($doc->method != 'GET')
 			  --data '{{json_encode($body)}}' \<br>
+			  @endif
 			  https://{HOST}/{{$doc->endpoint}}
     	</div>
+    	@if($doc->method == 'GET')
+    	<hr>
+    	<div class="col-xs-12 element">
+	    	<h6>Path</h6>
+	    	<div id="json-path"></div>
+	    	<div>
+	    		@foreach($doc->paths() as $path)
+	    			<li>
+	    				<span>
+	    						{{$path->name}}<span class="required">*</span> :
+	    				</span>
+	    				<span>
+	    						required|{{$path->type}}
+	    				</span>
+	    			</li>
+	    		@endforeach
+	    	</div>
+    	</div>
+    	@else
     	<hr>
     	<div class="col-xs-12 element">
 	    	<h6>Body</h6>
@@ -84,6 +110,7 @@
 	    		@endforeach
 	    	</div>
     	</div>
+    	@endif
     	<div class="col-xs-12 element">
 	    	<h6>Headers</h6>
 	    	<div id="json-header" style="border:0;"></div>
@@ -118,16 +145,27 @@
 @section('script')
 <script type="text/javascript" src="/js/json-viewer.js"></script>
 <script type="text/javascript">
-	var jsonBodyViewer = new JSONViewer();
-	var jsonBody = JSON.parse('<?= json_encode($body) ?>');
-	document.querySelector("#json-body")
-		.appendChild(jsonBodyViewer.getContainer());
-	jsonBodyViewer.showJSON(jsonBody);
+	
+	@if($doc->method == 'GET')
+		var jsonPathViewer = new JSONViewer();
+		var jsonPath = JSON.parse('<?= json_encode($paths) ?>');
+		document.querySelector("#json-path")
+			.appendChild(jsonPathViewer.getContainer());
+		jsonPathViewer.showJSON(jsonPath);
+	@else
+		var jsonBodyViewer = new JSONViewer();
+		var jsonBody = JSON.parse('<?= json_encode($body) ?>');
+		document.querySelector("#json-body")
+			.appendChild(jsonBodyViewer.getContainer());
+		jsonBodyViewer.showJSON(jsonBody);
+	@endif
+
 
 	var jsonHeaderViewer = new JSONViewer();
 	var jsonHeader = JSON.parse('<?= json_encode($headers) ?>');
 	document.querySelector("#json-header").appendChild(jsonHeaderViewer.getContainer());
 	jsonHeaderViewer.showJSON(jsonHeader);
+
 
 	@foreach($doc->messages() as $msg)
 		<?php 
