@@ -12,12 +12,12 @@
 	    <div class="col-xs-12">
 	    	<div class="form-group">
 	    		<label>عنوان سند</label>
-	    		<input type="text"class="form-control" placeholder="برای مثال : افزون کاربر" v-model="title">
+	    		<input type="text"class="form-control validate" placeholder="برای مثال : افزون کاربر" v-model="title">
 	    	</div>
 	    	<!-------- Description -------->
 	    	<div class="form-group">
 	    		<label>شرح مختصر این سند</label>
-	    		<textarea class="form-control" rows="3" 
+	    		<textarea class="form-control validate" rows="3" 
 	    				placeholder="برای مثال: با استفاده از این لینک میتوانید کاربران لخواه را اضافه کنید ..."
 	    				v-model="description">
 	    		</textarea>
@@ -27,7 +27,7 @@
 	    		<label>مسیر کامل</label>
 	    		<div class="input-group">
 				  <div class="input-group-prepend">
-				    <select class="form-control method" v-model="method">
+				    <select class="form-control method validate" v-model="method">
 				    	<option value="GET">GET</option>
 					  	<option value="POST">POST</option>
 					  	<option value="DELETE">DELETE</option>
@@ -35,7 +35,7 @@
 					  	<option value="PATCH">PATCH</option>
 					</select>
 				  </div>
-				  <input type="text" class="form-control endpoint" placeholder="users/add" v-model="endpoint" @keyup="handlePathVariables">
+				  <input type="text" class="form-control endpoint validate" placeholder="users/add" v-model="endpoint" @keyup="handlePathVariables">
 				</div>
 	    	</div>
 	    	<hr>
@@ -51,15 +51,22 @@
 		    		</label>
 	    			<div class="element col-xs-12" dir="ltr" v-for="(path,i) in paths">
 	    				<div class="input-group">
-							  <input type="text" class="form-control monospace" placeholder="(name)" v-model="path.name">
+							  <input type="text" class="form-control monospace validate" placeholder="(name)" v-model="path.name">
 							  <select class="form-control" v-model="path.type">
 								<option value="Boolean">Boolean</option>
 								<option value="Integer">Integer</option>
 								<option value="Long">Long</option>
 								<option value="String">String</option>
 								<option value="Enum">Enum</option>
+								<option value="Double">Double</option>
+								<option value="Array">Array</option>
 							</select>
-							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="path.sample">
+							<label class="switch">
+								<input type="checkbox" v-model="path.required">
+								<span class="slider"></span>
+							</label>
+							<span class="switch-label">required?</span>
+							<input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="path.sample">
 						</div>
 	    			</div>
     			</div>
@@ -72,9 +79,15 @@
 		    				</a>
 		    			</small>
 		    		</label>
-					<div class="element col-xs-12" dir="ltr" v-for="(body,i) in bodies">
+					<div class="element col-xs-12" style="padding-bottom: 0;" dir="ltr" v-for="(body,i) in bodies" 
+						v-bind:class="{'child': body.child }">
 							<div class="input-group">
 								  <div class="input-group-prepend">
+										<span class="input-group-text" style="background: #aaa;" 
+											data-toggle="tooltip" data-placement="top" 
+											title="this body field is child">
+											<input type="checkbox" v-model="body.child">
+										</span>
 										<span class="input-group-text" @click="moveBodyUp(i)">
 											<i class="fas fa-angle-up"></i>
 										</span>
@@ -85,23 +98,25 @@
 											<i class="fas fa-trash"></i>
 										</span>
 								  </div>
-								  <input type="text" class="form-control monospace" placeholder="(name)" v-model="body.name">
+								  <input type="text" class="form-control monospace validate" placeholder="(name)" v-model="body.name">
 								  <select class="form-control" v-model="body.type">
 									  <option value="Boolean">Boolean</option>
 										<option value="Integer">Integer</option>
 										<option value="Long">Long</option>
 										<option value="String">String</option>
 										<option value="Enum">Enum</option>
+										<option value="Double">Double</option>
+										<option value="Array" v-if="!body.child">Array</option>
 								  </select>
 								  <input type="text" class="form-control monospace" placeholder="(validation)" v-model="body.validation">
-								  <input type="text" class="form-control monospace" placeholder="(sample)" v-model="body.sample">
+								  <input type="text" class="form-control monospace validate" placeholder="(sample)" v-model="body.sample">
 									  
 								  <label class="switch">
 									<input type="checkbox" v-model="body.required">
 									<span class="slider"></span>
 								  </label>
 								  <span class="switch-label">required?</span>
-								  <input type="text" class="form-control monospace default-value-input" placeholder="(default)" v-model="body.deafult" v-if="!body.required">
+								  <input type="text" class="form-control monospace default-value-input validate" placeholder="(default)" v-model="body.deafult" v-if="!body.required">
 							</div>
 					</div>
 					<div class="row">
@@ -135,15 +150,17 @@
 									<i class="fas fa-trash"></i>
 							    </span>
 							  </div>
-							  <input type="text" class="form-control monospace" placeholder="(name) e.g. token" v-model="header.name">
+							  <input type="text" class="form-control monospace validate" placeholder="(name) e.g. token" v-model="header.name">
 							  <select class="form-control" v-model="header.type">
 								<option value="Boolean">Boolean</option>
 								<option value="Integer">Integer</option>
 								<option value="Long">Long</option>
 								<option value="String">String</option>
 								<option value="Enum">Enum</option>
+								<option value="Double">Double</option>
+								<option value="Array">Array</option>
 							</select>
-							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="header.sample">
+							  <input type="text" class="form-control monospace validate" placeholder="(sample) e.g. a1cbe5a370" v-model="header.sample">
 						</div>
 	    			</div>
     			</div>
@@ -167,9 +184,15 @@
 						</small>
 					</label>
 					<div class="row">
-						<div class="element col-xs-12" dir="ltr" v-for="(response,i) in responses">
+						<div class="element col-xs-12" dir="ltr" v-for="(response,i) in responses"
+							v-bind:class="{'child': response.child }">
 								<div class="input-group">
 									  <div class="input-group-prepend">
+										  	<span class="input-group-text" style="background: #aaa;" 
+												data-toggle="tooltip" data-placement="top" 
+												title="this response field is child">
+												<input type="checkbox" v-model="response.child">
+											</span>
 											<span class="input-group-text" @click="moveResponseUp(i)">
 												<i class="fas fa-angle-up"></i>
 											</span>
@@ -180,15 +203,17 @@
 												<i class="fas fa-trash"></i>
 											</span>
 									  </div>
-									  <input type="text" class="form-control monospace" placeholder="(name)" v-model="response.name">
+									  <input type="text" class="form-control monospace validate" placeholder="(name)" v-model="response.name">
 									  <select class="form-control" v-model="response.type">
 										  <option value="Boolean">Boolean</option>
 											<option value="Integer">Integer</option>
 											<option value="Long">Long</option>
 											<option value="String">String</option>
 											<option value="Enum">Enum</option>
+											<option value="Double">Double</option>
+											<option value="Array">Array</option>
 									  </select>
-									  <input type="text" class="form-control monospace" placeholder="(sample)" v-model="response.sample">												  
+									  <input type="text" class="form-control monospace validate" placeholder="(sample)" v-model="response.sample">												  
 								</div>
 						</div>
 					</div>
@@ -219,15 +244,15 @@
 									<i class="fas fa-trash"></i>
 							    </span>
 							</div>
-							<input type="text" class="form-control monospace" 	placeholder="Https Satus" v-model="message.status">
-							<input type="text" class="form-control monospace" placeholder="Custom Code" v-model="message.code">
+							<input type="text" class="form-control monospace validate" 	placeholder="Https Satus" v-model="message.status">
+							<input type="text" class="form-control monospace validate" placeholder="Custom Code" v-model="message.code">
 							<label class="switch">
 								<input type="checkbox" v-model="message.error">
 								<span class="slider"></span>
 							</label>
 							<span class="switch-label">Error?</span>
 						</div>
-						<textarea class="form-control" placeholder="‍توضیحات" rows="2" v-model="message.message"></textarea>
+						<textarea class="form-control validate" placeholder="‍توضیحات" rows="2" v-model="message.message"></textarea>
 	    			</div>
     			</div>
     			<div class="row">
@@ -253,15 +278,16 @@ var app = new Vue({
   el: '#app',
   data: {
   	title : '',
-  	method: 'GET',
+  	method: 'POST',
   	description: '',
   	endpoint: '',
   	tmpPaths: [],
   	paths: [],
     bodies : [
 		{
+			child: false,
 			name : '',
-			type: 'integer',
+			type: 'Integer',
 			validation: '',
 			sample: '',
 			required: 0,
@@ -271,14 +297,14 @@ var app = new Vue({
 	headers: [
 		{
 			name : '',
-			type: 'integer',
+			type: 'Integer',
 			sample: '',
 		}
 	],
 	responses : [
 		{
 			name : '',
-			type: 'integer',
+			type: 'Integer',
 			sample: '',
 		}
 	],
@@ -295,8 +321,9 @@ var app = new Vue({
   methods : {
 	  addBody : function(){
 			this.bodies.push({
+				child: false,
 				name : '',
-				type: 'integer',
+				type: 'Integer',
 				validation: '',
 				sample: '',
 				required: 0,
@@ -306,14 +333,14 @@ var app = new Vue({
 	  addHeader : function(){
 			this.headers.push({
 				name : '',
-				type: 'integer',
+				type: 'Integer',
 				sample: ''
 			});
 	  },
 	  addResponse : function(){
 			this.responses.push({
 				name : '',
-				type: 'integer',
+				type: 'Integer',
 				sample: ''
 			});
 	  },
@@ -328,6 +355,7 @@ var app = new Vue({
 	  copyBody : function(){
 		  this.bodies.forEach(body => {
 			  this.responses.push({
+				  child: body.child,
 				  name: body.name,
 				  type: body.type,
 				  sample: body.sample
@@ -397,7 +425,8 @@ var app = new Vue({
 						self.tmpPaths.push(val);
 						self.paths.push({
 							name: val.slice(1,-1),
-							type: 'integer',
+							type: 'Integer',
+							required: true,
 							sample: ''
 						});
 					}
@@ -408,22 +437,14 @@ var app = new Vue({
 	  },
 	  save: function(){
 	  		
-	  		$('input').each(function(){
-	  			if($(this).val() == ''){
-	  				$(this).css('background','#fab1a0');
+	  		$('.validate').each(function(){
+  				if($(this).val() == ''){
+	  				$(this).css('border','1px solid #e74c3c');
 	  			}else{
-	  				$(this).css('background','#fff');
+	  				$(this).css('border','1px solid #ced4da');
 	  			}
 	  		});
 
-	  		$('textarea').each(function(){
-	  			if($(this).val() == ''){
-	  				console.log($(this));
-	  				$(this).css('background','#fab1a0');
-	  			}else{
-	  				$(this).css('background','#fff');
-	  			}
-	  		});
 
 			var body = {};
 			body.title = this.title;

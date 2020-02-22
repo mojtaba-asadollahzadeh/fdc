@@ -15,127 +15,7 @@ class DocumentController extends Controller
 {
     public function create(Request $request)
     {
-
-    	$validation = Validator::make($request->all(),[ 
-	        'title' => 'required|string|min:1',
-    		'description' => 'required|string|min:1',
-    		'method' => 'required|string|in:POST,GET,DELETE,PUT,PATCH',
-    		'endpoint' => 'required|string',
-    		'bodies' => 'required|array',
-            'headers' => 'required|array',
-    		'responses' => 'required|array',
-    		'messages' => 'required|array',
-	    ]);
-
-        $errors = [];
-
-	    if($validation->fails()){
-	    	$errors['definition'] = $validation->errors();
-	    } 
-
-
-        /* paths validation */
-        if($request->input('method') == 'GET'){
-            /* path validation */
-            foreach ($request->input('paths') as $key => $path) {
-                
-                $validation = Validator::make($path,[ 
-                    'name' => 'required|string|min:1',
-                    'type' => 'required|string|min:1',
-                    'sample' => 'required|string',
-                ]);
-
-                if($validation->fails()){
-                    $errors['paths'][$key] = $validation->errors();
-                }        
-            }
-        }else{
-            if($request->input('method') != 'POST'){
-                /* path validation */
-                foreach ($request->input('paths') as $key => $path) {
-                    
-                    $validation = Validator::make($path,[ 
-                        'name' => 'required|string|min:1',
-                        'type' => 'required|string|min:1',
-                        'sample' => 'required|string',
-                    ]);
-
-                    if($validation->fails()){
-                        $errors['paths'][$key] = $validation->errors();
-                    }        
-                }
-            }
-
-            /* body validation */
-            foreach ($request->input('bodies') as $key => $body) {
-                
-                $validation = Validator::make($body,[ 
-                    'name' => 'required|string|min:1',
-                    'type' => 'required|string|min:1',
-                    'validation' => 'required|string',
-                    'sample' => 'required|string',
-                    'required' => 'sometimes||boolean'
-                ]);
-
-                if($validation->fails()){
-                    $errors['bodies'][$key] = $validation->errors();
-                }        
-            }
-        }
-        
-
-        /* headers validation */
-        foreach ($request->input('headers') as $key => $header) {
-            $validation = Validator::make($header,[ 
-                'name' => 'required|string|min:1',
-                'type' => 'required|string|min:1',
-                'sample' => 'required|string'
-            ]);
-
-            if($validation->fails()){
-                $errors['headers'][$key] = $validation->errors();
-            }
-        }
-
-        
-        
-
-        /* headers validation */
-        foreach ($request->input('responses') as $key => $response) {
-            $validation = Validator::make($response,[ 
-                'name' => 'required|string|min:1',
-                'type' => 'required|string|min:1',
-                'sample' => 'required|string'
-            ]);
-
-            if($validation->fails()){
-                $errors['responses'][$key] = $validation->errors();
-            }
-        }
-        
-        
-        /* messages validation */
-        foreach ($request->input('messages') as $key => $message) {
-            $validation = Validator::make($message,[ 
-                'status' => 'required|string|min:1',
-                'required' => 'sometimes|boolean',
-                'message' => 'required|string',
-            ]);
-
-            if($validation->fails()){
-                $errors['messages'][$key] = $validation->errors();
-            }
-        }
-
-
-        if(sizeof($errors) > 0){
-            return response()->json([
-                'success' => false,
-                'message' => 'validation failed on some of your data!',
-                'errors' => $errors
-            ]);
-        }
-
+        $this->validateRequest($request); 
 	    $doc = new Doc;
 		$doc->title = $request->input('title');
 		$doc->description = $request->input('description');
@@ -145,18 +25,31 @@ class DocumentController extends Controller
 	    
 	    if($request->input('method') != 'GET'){
 	    	
+            $currentParent = null;
 	    	foreach ($request->input('bodies') as $bd) {
     			$body = new Body;
     			$body->doc_id = $doc->id; 
-    			$body->name = $bd['name'];
+    			
+                if($currentParent != null && $bd['child'] == true){
+                    $body->parent_id = $currentParent;
+                }
+                
+                $body->name = $bd['name'];
     			$body->type = $bd['type'];
     			$body->validation = $bd['validation'];
     			$body->sample = $bd['sample'];
     			$body->required = $bd['required'];
-    			if(!$bd['required']){
+    			
+                if(!$bd['required']){
     				$body->default = $bd['default'];	
     			}
+
     			$body->save();
+                
+                if($bd['type'] == 'Array'){
+                    $currentParent = $body->id;
+                }
+
     		}
 
 	    }
@@ -166,6 +59,7 @@ class DocumentController extends Controller
     			$path->doc_id = $doc->id; 
     			$path->name = $pth['name'];
     			$path->type = $pth['type'];
+                $path->required = $pth['required'];
     			$path->sample = $pth['sample'];
     			$path->save();
     		}
@@ -180,13 +74,23 @@ class DocumentController extends Controller
 			$header->save();
 		}
 
+        $currentParent = null;
 		foreach ($request->input('responses') as $res) {
 			$response = new Response;
-			$response->doc_id = $doc->id; 
+			$response->doc_id = $doc->id;
+
+            if($currentParent != null && $res['child'] == true){
+                $response->parent_id = $currentParent;
+            }
+             
 			$response->name = $res['name'];
 			$response->type = $res['type'];
 			$response->sample = $res['sample'];
 			$response->save();
+
+            if($res['type'] == 'Array'){
+                $currentParent = $response->id;
+            }
 		}
 
 		foreach ($request->input('messages') as $msg) {
@@ -217,27 +121,7 @@ class DocumentController extends Controller
     public function update(Request $request,$id)
     {
 
-        $validation = Validator::make($request->all(),[ 
-            'title' => 'required|string|min:1',
-            'description' => 'required|string|min:1',
-            'method' => 'required|string|in:POST,GET,DELETE,PUT,PATCH',
-            'endpoint' => 'required|string',
-            'bodies' => 'required|array',
-            'headers' => 'required|array',
-            'responses' => 'required|array',
-            'messages' => 'required|array',
-        ]);
-
-        if($validation->fails()){
-            return response()->json([
-                'success' => false,
-                'message' => 'validation failed on some of your data!',
-                'data' => [
-                    $validation->errors()
-                ]
-            ]);
-        }
-
+        $this->validateRequest($request);
         $doc = Doc::find($id);
 
         if(!$doc){
@@ -285,6 +169,7 @@ class DocumentController extends Controller
                 $path->doc_id = $doc->id; 
                 $path->name = $pth['name'];
                 $path->type = $pth['type'];
+                $path->required = $pth['required'];
                 $path->sample = $pth['sample'];
                 $path->save();
             }
@@ -379,5 +264,131 @@ class DocumentController extends Controller
     public function list(Request $request)
     {
     	# code...
+    }
+
+    public function validateRequest($request)
+    {
+        $validation = Validator::make($request->all(),[ 
+            'title' => 'required|string|min:1',
+            'description' => 'required|string|min:1',
+            'method' => 'required|string|in:POST,GET,DELETE,PUT,PATCH',
+            'endpoint' => 'required|string',
+            'bodies' => 'required|array',
+            'headers' => 'required|array',
+            'responses' => 'required|array',
+            'messages' => 'required|array',
+        ]);
+
+        $errors = [];
+
+        if($validation->fails()){
+            $errors['definition'] = $validation->errors();
+        }
+
+        /* paths validation */
+        if($request->input('method') == 'GET'){
+            /* path validation */
+            foreach ($request->input('paths') as $key => $path) {
+                
+                $validation = Validator::make($path,[ 
+                    'name' => 'required|string|min:1',
+                    'type' => 'required|string|min:1',
+                    'required' => 'required|boolean',
+                    'sample' => 'required|string',
+                ]);
+
+                if($validation->fails()){
+                    $errors['paths'][$key] = $validation->errors();
+                }        
+            }
+        }else{
+            if($request->input('method') != 'POST'){
+                /* path validation */
+                foreach ($request->input('paths') as $key => $path) {
+                    
+                    $validation = Validator::make($path,[ 
+                        'name' => 'required|string|min:1',
+                        'type' => 'required|string|min:1',
+                        'required' => 'required|boolean',
+                        'sample' => 'required|string',
+                    ]);
+
+                    if($validation->fails()){
+                        $errors['paths'][$key] = $validation->errors();
+                    }        
+                }
+            }
+
+            if($request->input('method') != 'DELETE'){
+                /* body validation */
+                foreach ($request->input('bodies') as $key => $body) {
+                    
+                    $validation = Validator::make($body,[ 
+                        'name' => 'required|string|min:1',
+                        'type' => 'required|string|min:1',
+                        'sample' => 'required|string',
+                        'required' => 'sometimes||boolean'
+                    ]);
+
+                    if($validation->fails()){
+                        $errors['bodies'][$key] = $validation->errors();
+                    }        
+                }    
+            }
+            
+        }
+        
+
+        /* headers validation */
+        foreach ($request->input('headers') as $key => $header) {
+            $validation = Validator::make($header,[ 
+                'name' => 'required|string|min:1',
+                'type' => 'required|string|min:1',
+                'sample' => 'required|string'
+            ]);
+
+            if($validation->fails()){
+                $errors['headers'][$key] = $validation->errors();
+            }
+        }
+
+        
+        
+
+        /* headers validation */
+        foreach ($request->input('responses') as $key => $response) {
+            $validation = Validator::make($response,[ 
+                'name' => 'required|string|min:1',
+                'type' => 'required|string|min:1',
+                'sample' => 'required|string'
+            ]);
+
+            if($validation->fails()){
+                $errors['responses'][$key] = $validation->errors();
+            }
+        }
+        
+        
+        /* messages validation */
+        foreach ($request->input('messages') as $key => $message) {
+            $validation = Validator::make($message,[ 
+                'status' => 'required|string|min:1',
+                'required' => 'sometimes|boolean',
+                'message' => 'required|string',
+            ]);
+
+            if($validation->fails()){
+                $errors['messages'][$key] = $validation->errors();
+            }
+        }
+
+
+        if(sizeof($errors) > 0){
+            return response()->json([
+                'success' => false,
+                'message' => 'validation failed on some of your data!',
+                'errors' => $errors
+            ]);
+        }
     }
 }

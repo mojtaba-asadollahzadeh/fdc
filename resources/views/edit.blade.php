@@ -58,8 +58,15 @@
 								<option value="Long">Long</option>
 								<option value="String">String</option>
 								<option value="Enum">Enum</option>
+								<option value="Double">Double</option>
+								<option value="Array">Array</option>
 							</select>
-							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="path.sample">
+							<label class="switch">
+								<input type="checkbox" v-model="path.required">
+								<span class="slider"></span>
+							</label>
+							<span class="switch-label">required?</span>
+							<input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="path.sample">
 						</div>
 	    			</div>
     			</div>
@@ -72,9 +79,15 @@
 		    				</a>
 		    			</small>
 		    		</label>
-					<div class="element col-xs-12" dir="ltr" v-for="(body,i) in bodies">
+					<div class="element col-xs-12" dir="ltr" v-for="(body,i) in bodies" 
+							v-bind:class="{'child': body.child }">
 							<div class="input-group">
 								  <div class="input-group-prepend">
+								  		<span class="input-group-text" style="background: #aaa;" 
+											data-toggle="tooltip" data-placement="top" 
+											title="this body field is child">
+											<input type="checkbox" v-model="body.child">
+										</span>
 										<span class="input-group-text" @click="moveBodyUp(i)">
 											<i class="fas fa-angle-up"></i>
 										</span>
@@ -92,8 +105,10 @@
 										<option value="Long">Long</option>
 										<option value="String">String</option>
 										<option value="Enum">Enum</option>
+										<option value="Double">Double</option>
+										<option value="Array">Array</option>
 								  </select>
-								  <input type="text" class="form-control monospace" placeholder="(validation)" v-model="body.validation">
+								  <input type="text" class="form-control monospace validation" placeholder="(validation)" v-model="body.validation">
 								  <input type="text" class="form-control monospace" placeholder="(sample)" v-model="body.sample">
 									  
 								  <label class="switch">
@@ -142,6 +157,8 @@
 								<option value="Long">Long</option>
 								<option value="String">String</option>
 								<option value="Enum">Enum</option>
+								<option value="Double">Double</option>
+								<option value="Array">Array</option>
 							</select>
 							  <input type="text" class="form-control monospace" placeholder="(sample) e.g. a1cbe5a370" v-model="header.sample">
 						</div>
@@ -167,9 +184,15 @@
 						</small>
 					</label>
 					<div class="row">
-						<div class="element col-xs-12" dir="ltr" v-for="(response,i) in responses">
+						<div class="element col-xs-12" dir="ltr" v-for="(response,i) in responses"
+							v-bind:class="{'child': response.child }">
 								<div class="input-group">
 									  <div class="input-group-prepend">
+										  	<span class="input-group-text" style="background: #aaa;" 
+												data-toggle="tooltip" data-placement="top" 
+												title="this response field is child">
+												<input type="checkbox" v-model="response.child">
+											</span>
 											<span class="input-group-text" @click="moveResponseUp(i)">
 												<i class="fas fa-angle-up"></i>
 											</span>
@@ -187,6 +210,8 @@
 											<option value="Long">Long</option>
 											<option value="String">String</option>
 											<option value="Enum">Enum</option>
+											<option value="Double">Double</option>
+											<option value="Array">Array</option>
 									  </select>
 									  <input type="text" class="form-control monospace" placeholder="(sample)" v-model="response.sample">												  
 								</div>
@@ -274,6 +299,7 @@ var app = new Vue({
 			{
 				name : '{{$path->name}}',
 				type: '{{$path->type}}',
+				required: '{{$path->required}}',
 				sample: '{{$path->sample}}'
 			},
 		@endforeach
@@ -281,6 +307,7 @@ var app = new Vue({
     bodies : [
     	@foreach($doc->bodies() as $body)
 			{
+				child: @if($body->parent_id == null) false, @else true, @endif
 				name : '{{$body->name}}',
 				type: '{{$body->type}}',
 				validation: '{{$body->validation}}',
@@ -302,6 +329,7 @@ var app = new Vue({
 	responses : [
 		@foreach($doc->responses() as $response)
 			{
+				child: @if($response->parent_id == null) false, @else true, @endif
 				name : '{{$response->name}}',
 				type: '{{$response->type}}',
 				sample: '{{$response->sample}}',
@@ -426,6 +454,7 @@ var app = new Vue({
 						self.paths.push({
 							name: val.slice(1,-1),
 							type: 'integer',
+							required: true,
 							sample: ''
 						});
 					}
@@ -435,6 +464,25 @@ var app = new Vue({
 		
 	  },
 	  save: function(){
+	  		$('input').each(function(){
+	  			if($(this).hasClass('validation')){
+	  				if($(this).val() == ''){
+		  				$(this).css('background','#fab1a0');
+		  			}else{
+		  				$(this).css('background','#fff');
+		  			}
+	  			}
+	  		});
+
+	  		$('textarea').each(function(){
+	  			if($(this).val() == ''){
+	  				console.log($(this));
+	  				$(this).css('background','#fab1a0');
+	  			}else{
+	  				$(this).css('background','#fff');
+	  			}
+	  		});
+
 			var body = {};
 			body.title = this.title;
 			body.description = this.description;
@@ -486,10 +534,12 @@ var app = new Vue({
 	  saveAs: function(){
 	  		
 	  		$('input').each(function(){
-	  			if($(this).val() == ''){
-	  				$(this).css('background','#fab1a0');
-	  			}else{
-	  				$(this).css('background','#fff');
+	  			if($(this).hasClass('validation')){
+	  				if($(this).val() == ''){
+		  				$(this).css('background','#fab1a0');
+		  			}else{
+		  				$(this).css('background','#fff');
+		  			}
 	  			}
 	  		});
 
